@@ -7,6 +7,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.ServerResponse;
+import spaceshuttle.handler.EchoHandler;
+
+import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
+import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @SpringBootApplication
 public class Application {
@@ -29,5 +35,8 @@ public class Application {
 
         };
     }
-
+    @Bean
+    public RouterFunction<ServerResponse> monoRouterFunction(EchoHandler echoHandler) {
+        return route(GET("/echo"), echoHandler::echo);
+    }
 }
