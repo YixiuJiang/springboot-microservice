@@ -56,19 +56,19 @@ public class UserController {
 
 
     //Homework GET
-    @GetMapping(value = "/id")
-    public User getUserById(@PathVariable Long id){
+    @GetMapping(value = "/{id}")
+    public User getUserById(@PathVariable("id") Long id){
         return userRepository.findOne(id);
 
     }
     //Homework DELETE
-    @DeleteMapping(value = "/id")
-    public void deleteUserById(@PathVariable Long id){
+    @DeleteMapping(value = "/{id}")
+    public void deleteUserById(@PathVariable("id") Long id){
         userRepository.delete(id);
     }
     //Homework PUT
-    @PutMapping(value = "/id")
-    public String updateUser(@PathVariable Long id,
+    @PutMapping(value = "/{id}")
+    public String updateUser(@PathVariable("id") Long id,
                              @RequestParam String username,
                              @RequestParam String password){
 
