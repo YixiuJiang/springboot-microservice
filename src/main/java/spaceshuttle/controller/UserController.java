@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import spaceshuttle.model.User;
 import spaceshuttle.repository.UserRepository;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/users") // This means URL's start with /user (after Application path)
 
@@ -45,5 +47,26 @@ public class UserController {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
         return userRepository.save(newUser);
+    }
+
+    @GetMapping("user")
+    public @ResponseBody
+    Iterable<User> getUserByID(@RequestParam String username){
+        return userRepository.findByUsername(username);
+    }
+
+    @PutMapping("save")
+    public @ResponseBody
+    String updateUser(@RequestBody User user) {
+        user = userRepository.save(user);
+        return "update successfully";
+    }
+
+    @DeleteMapping("delete")
+    public @ResponseBody
+    String deleteUser(@RequestParam String username){
+        Iterable<User> user = userRepository.findByUsername(username);
+        userRepository.delete(user);
+        return "delete successfully";
     }
 }
