@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import spaceshuttle.model.User;
 import spaceshuttle.repository.UserRepository;
 
+import javax.persistence.Id;
+
 @RestController
 @RequestMapping(path = "/users") // This means URL's start with /user (after Application path)
 
@@ -39,6 +41,11 @@ public class UserController {
         return "Saved";
     }
 
+    /*  body, raw, jason
+    *   {"username":"kai","password":"1234"}
+    *
+    *
+    * */
     @PostMapping// Map ONLY GET Requests
     public @ResponseBody
     User addUser(@RequestBody User newUser) {
@@ -46,4 +53,32 @@ public class UserController {
         // @RequestParam means it is a parameter from the GET or POST request
         return userRepository.save(newUser);
     }
+
+
+    //Homework GET
+    @GetMapping(value = "/{id}")
+    public User getUserById(@PathVariable("id") Long id){
+        return userRepository.findOne(id);
+
+    }
+    //Homework DELETE
+    @DeleteMapping(value = "/{id}")
+    public void deleteUserById(@PathVariable("id") Long id){
+        userRepository.delete(id);
+    }
+    //Homework PUT
+    @PutMapping(value = "/{id}")
+    public String updateUser(@PathVariable("id") Long id,
+                             @RequestParam String username,
+                             @RequestParam String password){
+
+        User user = userRepository.findOne(id);
+        user.setUsername(username);
+        user.setPassword(password);
+        userRepository.save(user);
+
+        return "Saved";
+    }
+
+
 }
