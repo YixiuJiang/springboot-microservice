@@ -1,6 +1,7 @@
 package spaceshuttle.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import spaceshuttle.model.User;
 import spaceshuttle.repository.UserRepository;
@@ -26,7 +27,30 @@ public class UserController {
         return userRepository.findAll();
     }
 
-    @GetMapping // Map ONLY GET Requests
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    User getUserById(@RequestParam Long userId) {
+        return userRepository.findOne(userId);
+    }
+
+    @DeleteMapping
+    public @ResponseBody
+    String deleteUser(@RequestParam Long userId) {
+        userRepository.delete(userId);
+        return "Deleted";
+    }
+
+    @PutMapping
+    public @ResponseBody
+    String updateUser(@RequestParam Long userId, @RequestParam String username, @RequestParam String password) {
+        User currentUser = userRepository.findOne(userId);
+        currentUser.setUsername(username);
+        currentUser.setPassword(password);
+        userRepository.save(currentUser);
+        return "Updated";
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_XML_VALUE) // Map ONLY GET Requests
     public @ResponseBody
     String addNewUser(@RequestParam String username
             , @RequestParam String password) {
@@ -39,7 +63,7 @@ public class UserController {
         return "Saved";
     }
 
-    @PostMapping// Map ONLY GET Requests
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)// Map ONLY GET Requests
     public @ResponseBody
     User addUser(@RequestBody User newUser) {
         // @ResponseBody means the returned String is the response, not a view name
