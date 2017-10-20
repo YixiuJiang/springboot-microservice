@@ -52,33 +52,33 @@ public class UserController {
         return userRepository.save(newUser);
     }
 
-    @GetMapping(path = "/find")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public @ResponseBody
-    User findUser(@RequestParam Long id){
+    User findUserById(@PathVariable Long id){
         return userRepository.findOne(id);
     }
 
-    @PostMapping(path = "/update")
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
     public @ResponseBody
-    String updateUserById(@RequestParam Long id,
+    String updateUserById(@PathVariable Long id,
                           @RequestParam String username,
                           @RequestParam String password){
         User user = userRepository.findOne(id);
         user.setUsername(username);
         user.setPassword(password);
         userRepository.save(user);
-        return RESULT_SUCCESS;
+        return "Manipulation on User" + " " + id + " " + RESULT_SUCCESS;
     }
 
-    @DeleteMapping(path = "/delete")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     public @ResponseBody
-    String deleteUser(long id){
+    String deleteUser(@PathVariable long id){
         try{
             userRepository.delete(id);
-            return RESULT_SUCCESS;
+            return "Manipulation on User" + " " + id + " " + RESULT_SUCCESS;
         } catch (Exception e){
             e.printStackTrace();
-            return RESULT_FAILURE;
+            return "Manipulation on User" + " " + id + " " + RESULT_FAILURE;
         }
 
     }
