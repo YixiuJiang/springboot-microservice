@@ -7,6 +7,8 @@
 .idea/
 *.iml
 *.iws
+
+# Generated files
 out/
 
 # Mac
