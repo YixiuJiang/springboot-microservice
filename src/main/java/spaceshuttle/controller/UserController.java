@@ -46,4 +46,27 @@ public class UserController {
         // @RequestParam means it is a parameter from the GET or POST request
         return userRepository.save(newUser);
     }
+
+    //Get User by Id
+    @GetMapping(path = "/{id}")
+    public @ResponseBody
+    User getUserById(@PathVariable Long id){
+        return userRepository.findOne(id);
+    }
+
+    //Update User By Id
+    @PutMapping(path = "/{id}")
+    public @ResponseBody
+    void updateUserById(@PathVariable Long id,@RequestParam String username,@RequestParam String password){
+        User user = userRepository.findOne(id);
+        user.setPassword(password);
+        user.setUsername(username);
+    }
+
+    //Delete User By Id
+    @DeleteMapping(path = "/{id}")
+    public @ResponseBody
+    void deleteUserById(@PathVariable Long id){
+        userRepository.delete(id);
+    }
 }
