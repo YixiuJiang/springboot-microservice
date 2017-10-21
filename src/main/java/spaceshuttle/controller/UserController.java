@@ -3,6 +3,7 @@ package spaceshuttle.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import spaceshuttle.model.APIResponse;
 import spaceshuttle.model.User;
 import spaceshuttle.repository.UserRepository;
 
@@ -52,7 +53,7 @@ public class UserController {
 
     @PostMapping(consumes = MediaType.APPLICATION_XML_VALUE) // Map ONLY GET Requests
     public @ResponseBody
-    String addNewUser(@RequestParam String username
+    APIResponse addNewUser(@RequestParam String username
             , @RequestParam String password) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
@@ -60,7 +61,9 @@ public class UserController {
         newUser.setUsername(username);
         newUser.setPassword(password);
         userRepository.save(newUser);
-        return "Saved";
+        APIResponse apiResponse = new APIResponse();
+        apiResponse.setSuccess(true);
+        return apiResponse;
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)// Map ONLY GET Requests
