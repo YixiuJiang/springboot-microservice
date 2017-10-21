@@ -1,6 +1,6 @@
 package spaceshuttle.model;
 
-public class AllResponse {
+public class APIResponse {
     private boolean isSuccess;
     private String errorCode;
     private String errorMassage;
