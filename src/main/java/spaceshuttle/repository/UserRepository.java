@@ -1,7 +1,7 @@
 package spaceshuttle.repository;
 
-import spaceshuttle.model.User;
 import org.springframework.data.repository.CrudRepository;
+import spaceshuttle.model.User;
 
 import java.util.List;
 

@@ -5,6 +5,7 @@ package spaceshuttle.model;
  */
 public class APIResponse {
 
+public class APIResponse {
     private boolean success;
     private String errorCode;
     private String errorMessage;
