@@ -1,11 +1,27 @@
 package spaceshuttle.model;
 
+/**
+ * Created by shixunliu on 21/10/17.
+ */
+public class APIResponse {
+
 public class APIResponse {
     private boolean success;
     private String errorCode;
     private String errorMessage;
 
     private Object responseObject;
+
+    public APIResponse() {
+
+    }
+
+    public void clearAll() {
+        setResponseObject(null);
+        setErrorMessage(null);
+        setErrorCode(null);
+        setSuccess(false);
+    }
 
     public boolean isSuccess() {
         return success;

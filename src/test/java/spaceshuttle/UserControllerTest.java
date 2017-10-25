@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import spaceshuttle.model.User;
+import spaceshuttle.repository.UserRepository;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -26,6 +27,9 @@ public class UserControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Test
     public void getHello() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/users/hello").accept(MediaType.APPLICATION_JSON))
@@ -34,15 +38,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetUserById() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/users/5").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("{\"success\":true,\"errorCode\":null,\"errorMessage\":null,\"responseObject\":null}")));
-
-    }
-
-    @Test
-    public void testAddUser() throws Exception {
+    public void addNewUser() throws Exception {
         User user = new User();
         user.setPassword("password");
         user.setUsername("username");
@@ -50,8 +46,15 @@ public class UserControllerTest {
                 .content(asJsonString(user))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("{\"success\":true,\"errorCode\":null,\"errorMessage\":null,\"responseObject\":{\"id\":1,\"username\":\"username\",\"password\":\"password\"}}")));
+                .andExpect(content().string(equalTo("{\"success\":true,\"errorCode\":null,\"errorMessage\":null,\"responseObject\":null}")));
 
+    }
+
+    @Test
+    public void getUserById() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/users/1").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo(("{\"success\":true,\"errorCode\":null,\"errorMessage\":null,\"responseObject\":{\"id\":1,\"username\":\"username\",\"password\":\"password\"}}"))));
     }
 
     public static String asJsonString(final Object obj) {
