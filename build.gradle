@@ -20,7 +20,7 @@ apply plugin: 'docker'
 
 jar {
     baseName = 'spring-boot-microservice'
-    version =  version
+    version = version
 }
 
 repositories {
@@ -41,13 +41,11 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-actuator")
     // end::actuator[]
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
-    compile 'mysql:mysql-connector-java'
+    compile("mysql:mysql-connector-java")
 
     testCompile("junit:junit")
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("com.h2database:h2")
-
-
 }
 
 task buildDocker(type: Docker, dependsOn: build) {
