@@ -33,11 +33,10 @@ public class UserController {
 
 
     // Homework: get user by Id
-
     @GetMapping("/{id}")
     public APIResponse getUserById(@PathVariable("id") Long userId) {
         apiResponse.clearAll();
-        User targetUser = userRepository.findByUserId(userId);
+        User targetUser = userRepository.findById(userId);
 
         if (targetUser != null) {
             apiResponse.setSuccess(true);
@@ -54,7 +53,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public APIResponse deleteUserById(@PathVariable("id") Long userId) {
         apiResponse.clearAll();
-        User targetUser = userRepository.findByUserId(userId);
+        User targetUser = userRepository.findById(userId);
 
         if (targetUser != null) {
             apiResponse.setSuccess(true);
@@ -73,7 +72,7 @@ public class UserController {
     public APIResponse updateUser(@PathVariable("id") Long userId
             , @RequestBody String username, @RequestBody String password) {
         apiResponse.clearAll();
-        User targetUser = userRepository.findByUserId(userId);
+        User targetUser = userRepository.findById(userId);
 
         if (targetUser != null) {
             targetUser.setPassword(password);
@@ -89,26 +88,17 @@ public class UserController {
     }
 
 
-    @PostMapping(consumes = MediaType.APPLICATION_XML_VALUE) // Map ONLY GET Requests
-    public @ResponseBody
-    APIResponse addNewUser(@RequestParam String username
+    @PostMapping
+    public APIResponse addNewUser(@RequestParam String username
             , @RequestParam String password) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
+        apiResponse.clearAll();
         User newUser = new User();
         newUser.setUsername(username);
         newUser.setPassword(password);
         userRepository.save(newUser);
-        APIResponse apiResponse = new APIResponse();
         apiResponse.setSuccess(true);
         return apiResponse;
-    }
-
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)// Map ONLY GET Requests
-    public @ResponseBody
-    User addUser(@RequestBody User newUser) {
-        // @ResponseBody means the returned String is the response, not a view name
-        // @RequestParam means it is a parameter from the GET or POST request
-        return userRepository.save(newUser);
     }
 }
