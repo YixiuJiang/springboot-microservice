@@ -1,5 +1,6 @@
 package spaceshuttle;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import spaceshuttle.model.User;
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import spaceshuttle.repository.UserRepository;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -29,6 +27,9 @@ public class UserControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Test
     public void getHello() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/users/hello").accept(MediaType.APPLICATION_JSON))
@@ -37,9 +38,33 @@ public class UserControllerTest {
     }
 
     @Test
-    public void getUserById() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/users/2").accept(MediaType.APPLICATION_JSON))
+    public void addNewUser() throws Exception {
+        User user = new User();
+        user.setPassword("password");
+        user.setUsername("username");
+        mvc.perform(MockMvcRequestBuilders.post("/users").contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(asJsonString(user))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("{\"success\": true,\"errorCode\": null,\"errorMessage\": null,\"responseObject\": {\"id\": 2,\"username\": \"hello\",\"password\": \"world\"}}")));
+                .andExpect(content().string(equalTo("{\"success\":true,\"errorCode\":null,\"errorMessage\":null,\"responseObject\":null}")));
+
+    }
+
+    @Test
+    public void getUserById() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/users/1").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo(("{\"success\":true,\"errorCode\":null,\"errorMessage\":null,\"responseObject\":{\"id\":1,\"username\":\"username\",\"password\":\"password\"}}"))));
+    }
+
+    public static String asJsonString(final Object obj) {
+        try {
+            final ObjectMapper mapper = new ObjectMapper();
+            final String jsonContent = mapper.writeValueAsString(obj);
+            System.out.println(jsonContent);
+            return jsonContent;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

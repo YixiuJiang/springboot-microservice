@@ -31,6 +31,7 @@ public class UserController {
         return userRepository.findAll();
     }
 
+
     // Homework: get user by Id
     @GetMapping("/{id}")
     public APIResponse getUserById(@PathVariable("id") Long userId) {
@@ -86,14 +87,14 @@ public class UserController {
         return apiResponse;
     }
 
+
     @PostMapping
-    public @ResponseBody
-    APIResponse addUser(@RequestBody User newUser) {
+    public APIResponse addNewUser(@RequestBody User newUser) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
-        APIResponse apiResponse = new APIResponse();
+        apiResponse.clearAll();
+        userRepository.save(newUser);
         apiResponse.setSuccess(true);
-        apiResponse.setResponseObject(userRepository.save(newUser));
         return apiResponse;
     }
 }
