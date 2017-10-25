@@ -1,6 +1,7 @@
 package spaceshuttle.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import spaceshuttle.model.APIResponse;
 import spaceshuttle.model.User;
@@ -29,31 +30,30 @@ public class UserController {
         return userRepository.findAll();
     }
 
-    @GetMapping // Map ONLY GET Requests
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    String addNewUser(@RequestParam String username
-            , @RequestParam String password) {
+    APIResponse addUser(@RequestBody User newUser) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
-        User newUser = new User();
-        newUser.setUsername(username);
-        newUser.setPassword(password);
-        userRepository.save(newUser);
-        return "Saved";
-    }
+        APIResponse response = new APIResponse();
 
-    @PostMapping// Map ONLY GET Requests
-    public @ResponseBody
-    User addUser(@RequestBody User newUser) {
-        // @ResponseBody means the returned String is the response, not a view name
-        // @RequestParam means it is a parameter from the GET or POST request
-        return userRepository.save(newUser);
+        response.setSuccess(SUCCESS);
+
+        response.setResponseObject(userRepository.save(newUser));
+
+        return response;
     }
 
     @GetMapping("/{id}")
     public @ResponseBody
-    User getUserById(@PathVariable(value = "id") Long id) {
-        return userRepository.findOne(id);
+    APIResponse getUserById(@PathVariable(value = "id") Long id) {
+        APIResponse response = new APIResponse();
+
+        response.setSuccess(SUCCESS);
+
+        response.setResponseObject(userRepository.findById(id));
+
+        return response;
     }
 
     @PutMapping("/{id}")
@@ -62,12 +62,12 @@ public class UserController {
         APIResponse response = new APIResponse();
         response.setSuccess(SUCCESS);
 
-        User oldUser = userRepository.findOne(id);
+        User oldUser = userRepository.findById(id);
 
         oldUser.setUsername(user.getUsername());
         oldUser.setPassword(user.getPassword());
 
-        userRepository.save(oldUser);
+        response.setResponseObject(userRepository.save(oldUser));
         return response;
     }
 
@@ -76,6 +76,7 @@ public class UserController {
     APIResponse deleteUser(@PathVariable(value = "id") Long id) {
         APIResponse response = new APIResponse();
         response.setSuccess(SUCCESS);
+        response.setResponseObject(userRepository.findById(id));
         userRepository.delete(id);
         return response;
     }

@@ -4,6 +4,7 @@ public class APIResponse {
     private boolean isSuccess;
     private String errorCode;
     private String errorMassage;
+    private Object responseObject;
 
     public boolean isSuccess() {
         return isSuccess;
@@ -27,5 +28,13 @@ public class APIResponse {
 
     public void setErrorMassage(String errorMassage) {
         this.errorMassage = errorMassage;
+    }
+
+    public Object getResponseObject() {
+        return responseObject;
+    }
+
+    public void setResponseObject(Object responseObject) {
+        this.responseObject = responseObject;
     }
 }
