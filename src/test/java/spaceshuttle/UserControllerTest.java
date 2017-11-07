@@ -53,7 +53,7 @@ public class UserControllerTest {
         BeanUtils.copyProperties(user, savedUser);
         APIResponse apiResponse = APIResponseMother.getDefaultAPIResponse();
         apiResponse.setResponseObject(savedUser);
-        savedUser.setId(1L);
+        savedUser.setId(2L);
         mvc.perform(MockMvcRequestBuilders.post(USERS_URI).contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(asJsonString(user))
                 .accept(MediaType.APPLICATION_JSON))

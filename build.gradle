@@ -27,26 +27,38 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    vaadinVersion = '8.1.0'
+}
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    // tag::jetty[]
     compile("org.springframework.boot:spring-boot-starter-web") {
         exclude module: "spring-boot-starter-tomcat"
     }
     compile("org.springframework.boot:spring-boot-starter-jetty")
-    // end::jetty[]
-    // tag::actuator[]
     compile("org.springframework.boot:spring-boot-starter-actuator")
-    // end::actuator[]
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
-    compile("mysql:mysql-connector-java")
+    compile("com.vaadin:vaadin-spring-boot-starter")
+    compile 'mysql:mysql-connector-java'
+    compile("org.springframework.boot:spring-boot-starter-data-mongodb")
 
     testCompile("junit:junit")
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("com.h2database:h2")
+
+
 }
+
+
+dependencyManagement {
+    imports {
+        mavenBom "com.vaadin:vaadin-bom:${vaadinVersion}"
+    }
+}
+
 
 task buildDocker(type: Docker, dependsOn: build) {
     applicationName = jar.baseName
