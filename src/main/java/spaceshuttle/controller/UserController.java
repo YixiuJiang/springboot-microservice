@@ -6,6 +6,8 @@ import spaceshuttle.model.APIResponse;
 import spaceshuttle.model.User;
 import spaceshuttle.repository.UserRepository;
 
+
+// TDD: 知道想要什么， code quality
 @RestController
 @RequestMapping(path = "/users") // This means URL's start with /user (after Application path)
 
