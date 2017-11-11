@@ -2,6 +2,7 @@ package spaceshuttle.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import spaceshuttle.model.ApiResponse;
 import spaceshuttle.model.User;
 import spaceshuttle.repository.UserRepository;
 
@@ -19,17 +20,17 @@ public class UserController {
         return "Greetings from Spring Boot!";
     }
 
-    @GetMapping(path = "/all")
+    @GetMapping("/all")
     public @ResponseBody
     Iterable<User> getAllUsers() {
         // This returns a JSON or XML with the users
         return userRepository.findAll();
     }
 
-    @GetMapping // Map ONLY GET Requests
+    @RequestMapping("/add/{username},{password}") // Map ONLY GET Requests
     public @ResponseBody
-    String addNewUser(@RequestParam String username
-            , @RequestParam String password) {
+    String addNewUser(@PathVariable("username") String username
+            , @PathVariable("password")  String password) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
         User newUser = new User();
@@ -38,6 +39,46 @@ public class UserController {
         userRepository.save(newUser);
         return "Saved";
     }
+
+
+     /*
+        homework
+        get user by id
+     */
+    @GetMapping("/get/{userId}")
+    public @ResponseBody
+    User getUserById(@PathVariable("userId") Long id){
+        return  userRepository.findById(id);
+    }
+
+
+    /*
+        homework
+        update user by id
+     */
+    @PutMapping("/update/{userId},{userName},{userPassword}")
+    public @ResponseBody
+    String updateUserById(@PathVariable("userId") Long id,@PathVariable("userName")String userName,
+                        @PathVariable("userPassword")String password){
+        User user = userRepository.findById(id);
+        user.setUsername(userName);
+        user.setPassword(password);
+        userRepository.save(user);
+        return "Saved";
+    }
+
+
+    /*
+        Homework
+        Delete User by Id
+     */
+    @DeleteMapping("/delete/{userId}")
+    public ApiResponse delete(@PathVariable Long id){
+//        User user = userRepository.findByUserId(id);
+        userRepository.delete(id);
+        return new ApiResponse();
+    }
+
 
     @PostMapping// Map ONLY GET Requests
     public @ResponseBody
