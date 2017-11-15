@@ -81,36 +81,4 @@ public class UserController {
         apiResponse.setResponseObject(newUser);
         return apiResponse;
     }
-
-    // GET /users/2
-    @GetMapping(path = "/{id}")
-    public @ResponseBody
-    User getUser(@PathVariable long id) {
-        return userRepository.findOne(id);
-    }
-
-
-    // body -> form-data -> {newPassword: 222222}
-    // PUT /users/2
-    @PutMapping(path = "/{id}")// Map ONLY PUT Requests
-    public @ResponseBody
-    String editUser(@PathVariable long id
-                    , @RequestParam String newPassword) {
-
-        User user = userRepository.findOne(id);
-        if (user != null) {
-            user.setPassword(newPassword);
-            userRepository.save(user);
-            return "Edited";
-        }
-        return "Error";
-    }
-
-    // DELETE /users/2
-    @DeleteMapping(path = "/{id}")// Map ONLY DELETE Requests
-    public @ResponseBody
-    String deleteUser(@PathVariable long id) {
-        userRepository.delete(userRepository.findOne(id));
-        return "Deleted";
-    }
 }
