@@ -17,31 +17,62 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'docker'
+apply plugin: 'findbugs'
+apply plugin: 'pmd'
+apply plugin: 'checkstyle'
+apply plugin: 'jacoco'
 
 jar {
     baseName = 'spring-boot-microservice'
-    version =  version
+    version = version
 }
 
 repositories {
     mavenCentral()
 }
 
+ext {
+    vaadinVersion = '8.1.0'
+}
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integration-test/java')
+        }
+        resources.srcDir file('src/integration-test/resources')
+    }
+}
+
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+}
+
+task integrationTest(type: Test) {
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
 dependencies {
-    // tag::jetty[]
     compile("org.springframework.boot:spring-boot-starter-web") {
         exclude module: "spring-boot-starter-tomcat"
     }
     compile("org.springframework.boot:spring-boot-starter-jetty")
-    // end::jetty[]
-    // tag::actuator[]
     compile("org.springframework.boot:spring-boot-starter-actuator")
-    // end::actuator[]
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
-    compile 'mysql:mysql-connector-java'
+    compile("com.vaadin:vaadin-spring-boot-starter")
+    compile("mysql:mysql-connector-java")
+    compile("org.springframework.boot:spring-boot-starter-data-mongodb")
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    compile("org.springframework.boot:spring-boot-devtools")
+    compile("org.springframework.boot:spring-boot-starter-security")
+    compile("org.webjars:bootstrap:3.3.7")
 
     testCompile("junit:junit")
     testCompile("org.springframework.boot:spring-boot-starter-test")
@@ -49,6 +80,14 @@ dependencies {
 
 
 }
+
+
+dependencyManagement {
+    imports {
+        mavenBom "com.vaadin:vaadin-bom:${vaadinVersion}"
+    }
+}
+
 
 task buildDocker(type: Docker, dependsOn: build) {
     applicationName = jar.baseName
@@ -60,3 +99,42 @@ task buildDocker(type: Docker, dependsOn: build) {
         }
     }
 }
+
+findbugs {
+    ignoreFailures = true
+    toolVersion = "3.0.0"
+    sourceSets = [sourceSets.main]
+    reportsDir = file("$project.buildDir/reports/findbugs")
+    effort = "max"
+}
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+pmd {
+    ignoreFailures = true
+    sourceSets = [sourceSets.main]
+    reportsDir = file("$project.buildDir/reports/pmd")
+    ruleSets = [
+            "basic",
+            "braces"
+    ]
+}
+
+pmdMain {
+    ruleSets = ["java-basic", "java-strings", "java-braces"]
+}
+
+checkstyle {
+    configFile = new File(rootDir, "config/checkstyle.xml")
+}
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled = true
+    }
+}
+
+check.dependsOn jacocoTestReport

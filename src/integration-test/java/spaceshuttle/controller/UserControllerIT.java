@@ -1,4 +1,4 @@
-package spaceshuttle;
+package spaceshuttle.controller;
 
 import org.junit.Before;
 import org.junit.Test;
