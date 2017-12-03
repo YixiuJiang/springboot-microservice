@@ -13,24 +13,12 @@ import spaceshuttle.model.User;
 import spaceshuttle.service.UserService;
 
 import javax.validation.Valid;
-import java.util.Arrays;
-import java.util.Map;
 
 @Controller
 public class LoginController {
 
     @Autowired
     private UserService userService;
-
-    @RequestMapping("/")
-    public String welcome(Map<String, Object> model) {
-        model.put("message", "Welcome");
-        User user = new User();
-        user.setUsername("Charlie");
-        model.put("userList", Arrays.asList(user));
-        model.put("user", user);
-        return "welcome";
-    }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login() {
