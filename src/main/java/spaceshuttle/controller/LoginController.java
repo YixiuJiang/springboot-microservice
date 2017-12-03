@@ -13,16 +13,12 @@ import spaceshuttle.model.User;
 import spaceshuttle.service.UserService;
 
 import javax.validation.Valid;
-import java.util.Arrays;
-import java.util.Map;
 
 @Controller
 public class LoginController {
 
     @Autowired
     private UserService userService;
-
-
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login() {
